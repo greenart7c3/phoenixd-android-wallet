@@ -12,9 +12,6 @@ jobs:
     timeout-minutes: 30
 
     steps:
-      - name: Make gradlew executable
-        run: chmod +x ./gradlew
-
       - uses: actions/checkout@v4
 
       - name: Set up JDK 17
@@ -30,6 +27,9 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
+
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
 
       - name: Linter (gradle)
         run: ./gradlew ktlintCheck

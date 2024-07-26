@@ -9,9 +9,6 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Make gradlew executable
-        run: chmod +x ./gradlew
-
       - name: Checkout code
         uses: actions/checkout@v4
 
@@ -28,6 +25,9 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
+
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
 
       - name: Build AAB
         run: ./gradlew clean bundleRelease --stacktrace
