@@ -32,7 +32,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavController
 import com.greenart7c3.phoenixd.services.PhoenixdViewModel
 import java.text.DecimalFormat
 import java.time.Instant
@@ -44,9 +43,7 @@ import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen(
-    viewModel: PhoenixdViewModel
-) {
+fun MainScreen(viewModel: PhoenixdViewModel) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         bottomBar = {
@@ -54,19 +51,20 @@ fun MainScreen(
                 Row(
                     Modifier
                         .fillMaxWidth()
-                        .padding(start = 16.dp)
+                        .padding(start = 16.dp),
                 ) {
                     IconButton(onClick = { /*TODO*/ }) {
                         Icon(
-                            Icons.Default.Settings
-                            , contentDescription = "Settings"
+                            Icons.Default.Settings,
+                            contentDescription = "Settings",
                         )
                     }
                     Row(
                         horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier
-                            .fillMaxWidth()
+                        modifier =
+                        Modifier
+                            .fillMaxWidth(),
                     ) {
                         ElevatedButton(onClick = { /*TODO*/ }) {
                             Row(
@@ -75,7 +73,7 @@ fun MainScreen(
                             ) {
                                 Icon(
                                     Icons.Default.ArrowDownward,
-                                    contentDescription = "Settings"
+                                    contentDescription = "Settings",
                                 )
                                 Text("Receive")
                             }
@@ -83,8 +81,7 @@ fun MainScreen(
                         Spacer(modifier = Modifier.size(16.dp))
                         ElevatedButton(
                             onClick = {
-
-                            }
+                            },
                         ) {
                             Row(
                                 horizontalArrangement = Arrangement.spacedBy(4.dp),
@@ -92,16 +89,15 @@ fun MainScreen(
                             ) {
                                 Icon(
                                     Icons.Default.ArrowUpward,
-                                    contentDescription = "Settings"
+                                    contentDescription = "Settings",
                                 )
                                 Text("Send")
                             }
                         }
                     }
-
                 }
             }
-        }
+        },
     ) { innerPadding ->
         val state = viewModel.state.collectAsStateWithLifecycle()
         val refreshState = rememberPullToRefreshState()
@@ -111,10 +107,11 @@ fun MainScreen(
             isRefreshing = state.value.isRefreshing,
             onRefresh = {
                 viewModel.loadData()
-            }
+            },
         ) {
             LazyColumn(
-                modifier = Modifier
+                modifier =
+                Modifier
                     .padding(innerPadding)
                     .fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -123,12 +120,12 @@ fun MainScreen(
                     Row(
                         modifier = Modifier.padding(16.dp),
                         horizontalArrangement = Arrangement.spacedBy(4.dp),
-                        verticalAlignment = Alignment.CenterVertically
+                        verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Text(
                             text = DecimalFormat("#,###").format(state.value.balance),
                             fontSize = 24.sp,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
                         )
                         Text(text = "sat")
                     }
@@ -136,7 +133,8 @@ fun MainScreen(
 
                 itemsIndexed(state.value.payments) { _, payment ->
                     Card(
-                        modifier = Modifier
+                        modifier =
+                        Modifier
                             .fillMaxWidth()
                             .padding(8.dp),
                     ) {
@@ -146,7 +144,8 @@ fun MainScreen(
                             horizontalArrangement = Arrangement.SpaceBetween,
                         ) {
                             Row(
-                                modifier = Modifier
+                                modifier =
+                                Modifier
                                     .fillMaxWidth()
                                     .padding(8.dp),
                                 verticalAlignment = Alignment.CenterVertically,
@@ -155,16 +154,16 @@ fun MainScreen(
                                 payment.receivedSat?.let {
                                     Text("You Received")
                                     Column(
-                                        horizontalAlignment = Alignment.End
+                                        horizontalAlignment = Alignment.End,
                                     ) {
                                         Text(
                                             text = "${DecimalFormat("#,###").format(it)} sat",
-                                            textAlign = TextAlign.End
+                                            textAlign = TextAlign.End,
                                         )
                                         formatCreatedAt(payment.createdAt)?.let {
                                             Text(
                                                 it,
-                                                fontWeight = FontWeight.Light
+                                                fontWeight = FontWeight.Light,
                                             )
                                         }
                                     }
@@ -172,16 +171,16 @@ fun MainScreen(
                                 payment.sent?.let {
                                     Text("You sent")
                                     Column(
-                                        horizontalAlignment = Alignment.End
+                                        horizontalAlignment = Alignment.End,
                                     ) {
                                         Text(
                                             text = "${DecimalFormat("#,###").format(it)} sat",
-                                            textAlign = TextAlign.End
+                                            textAlign = TextAlign.End,
                                         )
                                         formatCreatedAt(payment.createdAt)?.let {
                                             Text(
                                                 it,
-                                                fontWeight = FontWeight.Light
+                                                fontWeight = FontWeight.Light,
                                             )
                                         }
                                     }
@@ -192,11 +191,13 @@ fun MainScreen(
                 }
             }
         }
-
     }
 }
 
-fun formatCreatedAt(createdAt: Long?, locale: Locale = Locale.getDefault()): String? {
+fun formatCreatedAt(
+    createdAt: Long?,
+    locale: Locale = Locale.getDefault(),
+): String? {
     return createdAt?.let {
         val dateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(it), ZoneId.systemDefault())
         val formatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT).withLocale(locale)

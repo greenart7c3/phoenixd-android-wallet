@@ -8,5 +8,5 @@ data class NodeInfo(
     val channels: List<Channel>,
     val chain: String,
     val blockHeight: Int,
-    val version: String
+    val version: String,
 )

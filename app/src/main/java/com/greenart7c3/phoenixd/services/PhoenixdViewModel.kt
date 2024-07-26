@@ -2,8 +2,6 @@ package com.greenart7c3.phoenixd.services
 
 import android.util.Log
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -12,7 +10,6 @@ import com.greenart7c3.phoenixd.models.Payment
 import io.ktor.client.call.body
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 data class PhoenixdState(
@@ -32,9 +29,10 @@ class PhoenixdViewModel : ViewModel() {
 
     fun loadData() {
         viewModelScope.launch(Dispatchers.IO) {
-            state.value = state.value.copy(
-                isRefreshing = true,
-            )
+            state.value =
+                state.value.copy(
+                    isRefreshing = true,
+                )
             try {
                 val response = CustomHttpClient.get("getinfo")
                 val body = response.body<NodeInfo>()
@@ -51,15 +49,17 @@ class PhoenixdViewModel : ViewModel() {
                 state.value.payments.clear()
                 state.value.payments.addAll(localPayments)
 
-                state.value = state.value.copy(
-                    balance = body.channels.sumOf { it.balanceSat },
-                    isRefreshing = false,
-                )
+                state.value =
+                    state.value.copy(
+                        balance = body.channels.sumOf { it.balanceSat },
+                        isRefreshing = false,
+                    )
             } catch (e: Exception) {
                 Log.e("error", e.toString())
-                state.value = state.value.copy(
-                    isRefreshing = false,
-                )
+                state.value =
+                    state.value.copy(
+                        isRefreshing = false,
+                    )
             }
         }
     }

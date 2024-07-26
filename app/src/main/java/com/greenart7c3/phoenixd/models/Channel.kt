@@ -9,5 +9,5 @@ data class Channel(
     val balanceSat: Long,
     val inboundLiquiditySat: Long,
     val capacitySat: Long,
-    val fundingTxId: String
+    val fundingTxId: String,
 )

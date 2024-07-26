@@ -42,9 +42,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @Composable
-fun LoginScreen(
-    navController: NavController
-) {
+fun LoginScreen(navController: NavController) {
     Scaffold { innerPadding ->
         var host by remember {
             mutableStateOf(TextFieldValue(""))
@@ -76,7 +74,8 @@ fun LoginScreen(
         }
 
         Column(
-            modifier = Modifier
+            modifier =
+            Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
                 .padding(16.dp),
@@ -101,14 +100,14 @@ fun LoginScreen(
                                 clipboardManager.getText()?.let {
                                     host = TextFieldValue(it)
                                 }
-                            }
+                            },
                         ) {
                             Icon(
                                 Icons.Default.ContentPaste,
-                                contentDescription = "Paste from clipboard"
+                                contentDescription = "Paste from clipboard",
                             )
                         }
-                    }
+                    },
                 )
                 OutlinedTextField(
                     modifier = Modifier.fillMaxWidth(),
@@ -125,14 +124,14 @@ fun LoginScreen(
                                 clipboardManager.getText()?.let {
                                     port = TextFieldValue(it)
                                 }
-                            }
+                            },
                         ) {
                             Icon(
                                 Icons.Default.ContentPaste,
-                                contentDescription = "Paste from clipboard"
+                                contentDescription = "Paste from clipboard",
                             )
                         }
-                    }
+                    },
                 )
                 OutlinedTextField(
                     modifier = Modifier.fillMaxWidth(),
@@ -149,19 +148,20 @@ fun LoginScreen(
                                 clipboardManager.getText()?.let {
                                     password = TextFieldValue(it)
                                 }
-                            }
+                            },
                         ) {
                             Icon(
                                 Icons.Default.ContentPaste,
-                                contentDescription = "Paste from clipboard"
+                                contentDescription = "Paste from clipboard",
                             )
                         }
-                    }
+                    },
                 )
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(4.dp),
                     verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
+                    modifier =
+                    Modifier
                         .padding(bottom = 16.dp, top = 8.dp)
                         .clickable {
                             useSSL = !useSSL
@@ -186,11 +186,12 @@ fun LoginScreen(
                             Settings.host = host.text
                             Settings.port = port.text.toIntOrNull() ?: 0
                             Settings.password = password.text
-                            Settings.protocol = if (useSSL) {
-                                URLProtocol.HTTPS
-                            } else {
-                                URLProtocol.HTTP
-                            }
+                            Settings.protocol =
+                                if (useSSL) {
+                                    URLProtocol.HTTPS
+                                } else {
+                                    URLProtocol.HTTP
+                                }
                             try {
                                 val response = CustomHttpClient.get("getinfo")
                                 if (response.status.value == 200) {
@@ -201,7 +202,7 @@ fun LoginScreen(
                                         Toast.makeText(
                                             context,
                                             "Successfully connected to Phoenixd server",
-                                            Toast.LENGTH_SHORT
+                                            Toast.LENGTH_SHORT,
                                         ).show()
                                         navController.navigate("main") {
                                             popUpTo("login") { inclusive = true }
@@ -211,7 +212,7 @@ fun LoginScreen(
                                         Toast.makeText(
                                             context,
                                             "Failed to connect to Phoenixd server",
-                                            Toast.LENGTH_SHORT
+                                            Toast.LENGTH_SHORT,
                                         ).show()
                                     }
                                 }
@@ -222,12 +223,12 @@ fun LoginScreen(
                                     Toast.makeText(
                                         context,
                                         "Failed to connect to Phoenixd server",
-                                        Toast.LENGTH_SHORT
+                                        Toast.LENGTH_SHORT,
                                     ).show()
                                 }
                             }
                         }
-                    }
+                    },
                 ) {
                     Text(text = "Login")
                 }

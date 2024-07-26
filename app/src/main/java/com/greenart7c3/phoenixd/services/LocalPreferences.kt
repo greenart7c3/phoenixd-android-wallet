@@ -38,9 +38,7 @@ object LocalPreferences {
         editor.apply()
     }
 
-    private fun encryptedPreferences(
-        context: Context,
-    ): SharedPreferences {
+    private fun encryptedPreferences(context: Context): SharedPreferences {
         return EncryptedStorage.preferences(context)
     }
 }
