@@ -49,13 +49,16 @@ class CustomHttpClient {
 
     suspend fun submitForm(
         url: String,
+        parameters: List<Pair<String, String>>,
     ): HttpResponse {
         val localUrl = if (url.startsWith("/")) url else "/$url"
         val protocol = if (Settings.protocol == URLProtocol.HTTP) "http" else "https"
         return httpClient.submitForm(
             url = "$protocol://${Settings.host}:${Settings.port}$localUrl",
             formParameters = parameters {
-                append("description", "")
+                parameters.forEach {
+                    append(it.first, it.second)
+                }
             },
         ) {
             basicAuth("", Settings.password)

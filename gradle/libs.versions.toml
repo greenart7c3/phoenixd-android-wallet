@@ -16,6 +16,9 @@ kotlinxSerialization = "1.7.1"
 securityCryptoKtx = "1.1.0-alpha06"
 zxing = "4.3.0"
 zxingCore = "3.5.3"
+lightning-kmp = "1.7.2-FEECREDIT-10"
+jna = "5.14.0"
+uiViewbinding = "1.6.8"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -42,6 +45,10 @@ ktor-client = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
 ktor-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktor" }
 zxing-core = { module = "com.google.zxing:core", version.ref = "zxingCore" }
 zxing-android-embedded = { module = "com.journeyapps:zxing-android-embedded", version.ref = "zxing" }
+acinq-lightning-kmp = { group = "fr.acinq.lightning", name = "lightning-kmp", version.ref = "lightning-kmp" }
+secp256k1-kmp = { group = "fr.acinq.secp256k1", name = "secp256k1-kmp-jni-android", version = "0.15.0" }
+jna = { module = "net.java.dev.jna:jna", version.ref = "jna" }
+androidx-ui-viewbinding = { group = "androidx.compose.ui", name = "ui-viewbinding", version.ref = "uiViewbinding" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

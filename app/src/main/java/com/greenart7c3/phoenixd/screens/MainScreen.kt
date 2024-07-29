@@ -89,6 +89,7 @@ fun MainScreen(
                         Spacer(modifier = Modifier.size(16.dp))
                         ElevatedButton(
                             onClick = {
+                                navController.navigate("send")
                             },
                         ) {
                             Row(
@@ -181,8 +182,15 @@ fun MainScreen(
                                     Column(
                                         horizontalAlignment = Alignment.End,
                                     ) {
+                                        val fees = payment.fees ?: 0
+                                        val fee = if (fees > 0) fees / 1000 else 0
+                                        val sent = if (fees > 0) it - fee else it
                                         Text(
-                                            text = "${DecimalFormat("#,###").format(it)} sat",
+                                            text = "${DecimalFormat("#,###").format(sent)} sat",
+                                            textAlign = TextAlign.End,
+                                        )
+                                        Text(
+                                            text = "Fee ${DecimalFormat("#,###").format(fee)} sat",
                                             textAlign = TextAlign.End,
                                         )
                                         formatCreatedAt(payment.createdAt)?.let {

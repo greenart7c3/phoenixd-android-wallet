@@ -53,7 +53,7 @@ fun LoginScreen(navController: NavController) {
         var password by remember {
             mutableStateOf(TextFieldValue(""))
         }
-        var loading by remember { mutableStateOf(true) }
+        var loading by remember { mutableStateOf(false) }
         var useSSL by remember { mutableStateOf(false) }
         val scope = rememberCoroutineScope()
         val clipboardManager = LocalClipboardManager.current

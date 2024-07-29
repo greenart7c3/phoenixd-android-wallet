@@ -43,6 +43,11 @@ class PhoenixdViewModel : ViewModel() {
                 val response4 = httpClient.get("payments/outgoing")
                 val outgoingPayments = response4.body<List<Payment>>()
 
+                outgoingPayments.forEach {
+                    Log.d("outgoingPayments", ((it.fees ?: 1) / 1000).toString())
+                    Log.d("outgoingPayments", it.sent.toString())
+                }
+
                 localPayments.addAll(incomingPayments)
                 localPayments.addAll(outgoingPayments)
                 localPayments.sortByDescending { it.createdAt }

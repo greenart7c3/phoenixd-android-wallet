@@ -54,7 +54,9 @@ fun ReceiveScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { },
+                title = {
+                    Text(text = "Receive")
+                },
                 navigationIcon = {
                     IconButton(
                         onClick = {
@@ -142,7 +144,7 @@ fun ReceiveScreen(
                         }
                     },
                 ) {
-                    Text(text = "Bolt12")
+                    Text(text = "Offer")
                 }
             }
         }

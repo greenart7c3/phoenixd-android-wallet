@@ -21,9 +21,11 @@ import androidx.navigation.compose.rememberNavController
 import com.greenart7c3.phoenixd.screens.LoginScreen
 import com.greenart7c3.phoenixd.screens.MainScreen
 import com.greenart7c3.phoenixd.screens.ReceiveScreen
+import com.greenart7c3.phoenixd.screens.SendScreen
 import com.greenart7c3.phoenixd.services.LocalPreferences
 import com.greenart7c3.phoenixd.services.PhoenixdViewModel
 import com.greenart7c3.phoenixd.services.ReceiveViewModel
+import com.greenart7c3.phoenixd.services.SendViewModel
 import com.greenart7c3.phoenixd.services.Settings
 import com.greenart7c3.phoenixd.ui.theme.PhoenixdTheme
 import kotlinx.coroutines.Dispatchers
@@ -69,6 +71,14 @@ class MainActivity : ComponentActivity() {
                             composable("receive") {
                                 val viewModel by viewModels<ReceiveViewModel>()
                                 ReceiveScreen(
+                                    viewModel = viewModel,
+                                    navController = navController,
+                                )
+                            }
+
+                            composable("send") {
+                                val viewModel by viewModels<SendViewModel>()
+                                SendScreen(
                                     viewModel = viewModel,
                                     navController = navController,
                                 )

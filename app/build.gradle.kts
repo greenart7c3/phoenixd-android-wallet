@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.serialization)
     alias(libs.plugins.ktlint)
+    kotlin("kapt") version "2.0.0"
 }
 
 android {
@@ -31,6 +32,13 @@ android {
                 "proguard-rules.pro",
             )
         }
+        debug {
+            debug {
+                applicationIdSuffix = ".debug"
+                versionNameSuffix = "-DEBUG"
+                resValue("string", "app_name", "@string/app_name_debug")
+            }
+        }
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
@@ -41,6 +49,8 @@ android {
     }
     buildFeatures {
         compose = true
+        dataBinding = true
+        viewBinding = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.1"
@@ -69,6 +79,7 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.ui.viewbinding)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -86,4 +97,9 @@ dependencies {
     implementation(libs.ktor.cio)
     implementation(libs.zxing.core)
     implementation(libs.zxing.android.embedded)
+    implementation(libs.jna) {
+        artifact { type = "aar" }
+    }
+    implementation(libs.acinq.lightning.kmp)
+    implementation(libs.secp256k1.kmp)
 }

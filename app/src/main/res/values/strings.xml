@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">phoenixd</string>
+    <string name="app_name_debug">phoenixd debug</string>
 </resources>

@@ -42,7 +42,13 @@ class ReceiveViewModel : ViewModel() {
                             qrCodeBolt12 = body,
                         )
                 }
-                val responseInvoice = httpClient.submitForm("createinvoice")
+                val responseInvoice = httpClient.submitForm(
+                    url = "createinvoice",
+                    parameters = listOf(
+                        Pair("description", ""),
+                        Pair("amountSat", "1000"),
+                    ),
+                )
                 val bodyInvoice = responseInvoice.body<GeneratedInvoice>()
                 state.value = state.value.copy(
                     qrCode = bodyInvoice.serialized,
