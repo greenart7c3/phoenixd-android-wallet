@@ -39,6 +39,7 @@ import com.greenart7c3.phoenixd.services.LocalPreferences
 import com.greenart7c3.phoenixd.services.Settings
 import io.ktor.http.URLProtocol
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
@@ -192,8 +193,9 @@ fun LoginScreen(navController: NavController) {
                                 } else {
                                     URLProtocol.HTTP
                                 }
+                            val httpClient = CustomHttpClient()
                             try {
-                                val response = CustomHttpClient.get("getinfo")
+                                val response = httpClient.get("getinfo")
                                 if (response.status.value == 200) {
                                     LocalPreferences.saveSettings(context)
                                 }
@@ -225,6 +227,11 @@ fun LoginScreen(navController: NavController) {
                                         "Failed to connect to Phoenixd server",
                                         Toast.LENGTH_SHORT,
                                     ).show()
+                                }
+                            } finally {
+                                scope.launch(Dispatchers.IO) {
+                                    delay(1000)
+                                    httpClient.close()
                                 }
                             }
                         }

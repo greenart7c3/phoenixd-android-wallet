@@ -2,8 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.compose.compiler)
-    kotlin("plugin.serialization") version "2.0.0"
-    id("org.jlleitschuh.gradle.ktlint") version "12.1.1"
+    alias(libs.plugins.serialization)
+    alias(libs.plugins.ktlint)
 }
 
 android {
@@ -78,9 +78,10 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.material.extended.icons)
-    implementation(libs.acinq.lightning.kmp)
-    implementation(libs.serialization)
+    implementation(libs.kotlinx.serialization)
     implementation(libs.ktor.client.content.negotiation)
     implementation(libs.ktor.serialization.kotlinx.json)
     implementation(libs.security.crypto.ktx)
+    implementation(libs.ktor.client)
+    implementation(libs.ktor.cio)
 }

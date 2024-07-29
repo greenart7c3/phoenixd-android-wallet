@@ -21,6 +21,7 @@ data class PhoenixdState(
 class PhoenixdViewModel : ViewModel() {
     private val _state = MutableStateFlow(PhoenixdState())
     val state = _state
+    private val httpClient = CustomHttpClient()
 
     init {
         Log.d("PhoenixdViewModel", "init")
@@ -34,12 +35,12 @@ class PhoenixdViewModel : ViewModel() {
                     isRefreshing = true,
                 )
             try {
-                val response = CustomHttpClient.get("getinfo")
+                val response = httpClient.get("getinfo")
                 val body = response.body<NodeInfo>()
                 val localPayments = mutableListOf<Payment>()
-                val response3 = CustomHttpClient.get("payments/incoming")
+                val response3 = httpClient.get("payments/incoming")
                 val incomingPayments = response3.body<List<Payment>>()
-                val response4 = CustomHttpClient.get("payments/outgoing")
+                val response4 = httpClient.get("payments/outgoing")
                 val outgoingPayments = response4.body<List<Payment>>()
 
                 localPayments.addAll(incomingPayments)
@@ -66,6 +67,7 @@ class PhoenixdViewModel : ViewModel() {
 
     override fun onCleared() {
         Log.d("PhoenixdViewModel", "onCleared")
+        httpClient.close()
         super.onCleared()
     }
 }

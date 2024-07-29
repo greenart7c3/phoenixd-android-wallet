@@ -10,7 +10,7 @@ import io.ktor.http.parameters
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
-object CustomHttpClient {
+class CustomHttpClient {
     private val httpClient =
         HttpClient {
             install(ContentNegotiation) {
@@ -23,6 +23,10 @@ object CustomHttpClient {
                 )
             }
         }
+
+    fun close() {
+        httpClient.close()
+    }
 
     suspend fun get(url: String): HttpResponse {
         val localUrl = if (url.startsWith("/")) url else "/$url"
