@@ -20,7 +20,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -59,20 +58,6 @@ fun LoginScreen(navController: NavController) {
         val scope = rememberCoroutineScope()
         val clipboardManager = LocalClipboardManager.current
         val context = LocalContext.current
-
-        LaunchedEffect(Unit) {
-            scope.launch(Dispatchers.IO) {
-                LocalPreferences.getSavedSettings(context)
-                if (Settings.host.isNotEmpty() && Settings.password.isNotEmpty()) {
-                    scope.launch(Dispatchers.Main) {
-                        navController.navigate("main") {
-                            popUpTo("login") { inclusive = true }
-                        }
-                    }
-                }
-                loading = false
-            }
-        }
 
         Column(
             modifier =
