@@ -32,6 +32,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
 import com.greenart7c3.phoenixd.services.PhoenixdViewModel
 import java.text.DecimalFormat
 import java.time.Instant
@@ -43,7 +44,10 @@ import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen(viewModel: PhoenixdViewModel) {
+fun MainScreen(
+    viewModel: PhoenixdViewModel,
+    navController: NavController,
+) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         bottomBar = {
@@ -66,7 +70,11 @@ fun MainScreen(viewModel: PhoenixdViewModel) {
                         Modifier
                             .fillMaxWidth(),
                     ) {
-                        ElevatedButton(onClick = { /*TODO*/ }) {
+                        ElevatedButton(
+                            onClick = {
+                                navController.navigate("receive")
+                            },
+                        ) {
                             Row(
                                 horizontalArrangement = Arrangement.spacedBy(4.dp),
                                 verticalAlignment = Alignment.CenterVertically,

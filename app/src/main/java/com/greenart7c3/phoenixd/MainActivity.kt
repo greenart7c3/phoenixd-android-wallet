@@ -7,9 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -22,8 +20,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.greenart7c3.phoenixd.screens.LoginScreen
 import com.greenart7c3.phoenixd.screens.MainScreen
+import com.greenart7c3.phoenixd.screens.ReceiveScreen
 import com.greenart7c3.phoenixd.services.LocalPreferences
 import com.greenart7c3.phoenixd.services.PhoenixdViewModel
+import com.greenart7c3.phoenixd.services.ReceiveViewModel
 import com.greenart7c3.phoenixd.services.Settings
 import com.greenart7c3.phoenixd.ui.theme.PhoenixdTheme
 import kotlinx.coroutines.Dispatchers
@@ -46,32 +46,40 @@ class MainActivity : ComponentActivity() {
                     }
                 }
 
-                Scaffold { innerPadding ->
-                    Box(
-                        Modifier
-                            .fillMaxSize()
-                            .padding(innerPadding),
-                    ) {
-                        if (isLoading) {
-                            Box(
-                                Modifier.fillMaxSize(),
-                                contentAlignment = Alignment.Center,
-                            ) {
-                                CircularProgressIndicator()
+                Box(
+                    Modifier
+                        .fillMaxSize(),
+                ) {
+                    if (isLoading) {
+                        Box(
+                            Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            CircularProgressIndicator()
+                        }
+                    } else {
+                        NavHost(
+                            navController = navController,
+                            startDestination = if (Settings.host.isNotEmpty() && Settings.password.isNotEmpty()) "main" else "login",
+                        ) {
+                            composable("login") {
+                                LoginScreen(navController)
                             }
-                        } else {
-                            NavHost(
-                                navController = navController,
-                                startDestination = if (Settings.host.isNotEmpty() && Settings.password.isNotEmpty()) "main" else "login",
-                            ) {
-                                composable("login") {
-                                    LoginScreen(navController)
-                                }
 
-                                composable("main") {
-                                    val viewModel by viewModels<PhoenixdViewModel>()
-                                    MainScreen(viewModel)
-                                }
+                            composable("receive") {
+                                val viewModel by viewModels<ReceiveViewModel>()
+                                ReceiveScreen(
+                                    viewModel = viewModel,
+                                    navController = navController,
+                                )
+                            }
+
+                            composable("main") {
+                                val viewModel by viewModels<PhoenixdViewModel>()
+                                MainScreen(
+                                    viewModel,
+                                    navController,
+                                )
                             }
                         }
                     }

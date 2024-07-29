@@ -84,4 +84,6 @@ dependencies {
     implementation(libs.security.crypto.ktx)
     implementation(libs.ktor.client)
     implementation(libs.ktor.cio)
+    implementation(libs.zxing.core)
+    implementation(libs.zxing.android.embedded)
 }
