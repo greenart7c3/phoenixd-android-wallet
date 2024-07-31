@@ -3,11 +3,13 @@ package com.greenart7c3.phoenixd.screens
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.CircularProgressIndicator
@@ -44,10 +46,6 @@ fun ReceiveScreen(
     navController: NavController,
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
-    val bottomSheetState = rememberModalBottomSheetState()
-    var showBottomSheet by remember {
-        mutableStateOf(false)
-    }
     val scope = rememberCoroutineScope()
     val clipboardManager = LocalClipboardManager.current
 
@@ -87,14 +85,21 @@ fun ReceiveScreen(
                     CircularProgressIndicator()
                 }
             } else {
+                val bottomSheetState = rememberModalBottomSheetState(
+                    skipPartiallyExpanded = true,
+                )
+                var showBottomSheet by remember {
+                    mutableStateOf(false)
+                }
+
                 if (showBottomSheet) {
                     ModalBottomSheet(
-                        modifier = Modifier.heightIn(max = 700.dp),
+                        modifier = Modifier.padding(top = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()),
                         sheetState = bottomSheetState,
                         onDismissRequest = {
                             scope.launch {
-                                showBottomSheet = false
                                 bottomSheetState.hide()
+                                showBottomSheet = false
                             }
                         },
                     ) {
