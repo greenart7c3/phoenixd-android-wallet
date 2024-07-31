@@ -133,7 +133,7 @@ fun MainScreen(
                     ) {
                         Text(
                             text = DecimalFormat("#,###").format(state.value.balance),
-                            fontSize = 24.sp,
+                            fontSize = 36.sp,
                             fontWeight = FontWeight.Bold,
                         )
                         Text(text = "sat")
@@ -186,11 +186,7 @@ fun MainScreen(
                                         val fee = if (fees > 0) fees / 1000 else 0
                                         val sent = if (fees > 0) it - fee else it
                                         Text(
-                                            text = "${DecimalFormat("#,###").format(sent)} sat",
-                                            textAlign = TextAlign.End,
-                                        )
-                                        Text(
-                                            text = "Fee ${DecimalFormat("#,###").format(fee)} sat",
+                                            text = "${DecimalFormat("#,###").format(sent)} sat + ${DecimalFormat("#,###").format(fee)} sat fee",
                                             textAlign = TextAlign.End,
                                         )
                                         formatCreatedAt(payment.createdAt)?.let {
