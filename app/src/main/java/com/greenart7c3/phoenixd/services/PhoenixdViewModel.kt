@@ -5,6 +5,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.greenart7c3.phoenixd.models.Channel
 import com.greenart7c3.phoenixd.models.NodeInfo
 import com.greenart7c3.phoenixd.models.Payment
 import io.ktor.client.call.body
@@ -16,6 +17,7 @@ data class PhoenixdState(
     var balance: Long = 0,
     var payments: MutableList<Payment> = mutableListOf(),
     val isRefreshing: Boolean = false,
+    val channels: List<Channel> = listOf(),
 )
 
 class PhoenixdViewModel : ViewModel() {
@@ -43,11 +45,6 @@ class PhoenixdViewModel : ViewModel() {
                 val response4 = httpClient.get("payments/outgoing")
                 val outgoingPayments = response4.body<List<Payment>>()
 
-                outgoingPayments.forEach {
-                    Log.d("outgoingPayments", ((it.fees ?: 1) / 1000).toString())
-                    Log.d("outgoingPayments", it.sent.toString())
-                }
-
                 localPayments.addAll(incomingPayments)
                 localPayments.addAll(outgoingPayments)
                 localPayments.sortByDescending { it.createdAt }
@@ -59,6 +56,7 @@ class PhoenixdViewModel : ViewModel() {
                     state.value.copy(
                         balance = body.channels.sumOf { it.balanceSat },
                         isRefreshing = false,
+                        channels = body.channels,
                     )
             } catch (e: Exception) {
                 Log.e("error", e.toString())
