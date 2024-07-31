@@ -3,14 +3,18 @@ package com.greenart7c3.phoenixd.screens
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Send
+import androidx.compose.material.icons.filled.ContentPaste
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedButton
@@ -27,6 +31,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
@@ -44,6 +50,7 @@ fun SendScreen(
     val state = viewModel.state.collectAsStateWithLifecycle()
     var scanView by remember { mutableStateOf<DecoratedBarcodeView?>(null) }
     val context = LocalContext.current
+    val clipboardManager = LocalClipboardManager.current
 
     DisposableEffect(Unit) {
         onDispose {
@@ -67,8 +74,42 @@ fun SendScreen(
                         viewModel.onScannedText(it)
                     },
                 )
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(0.85f)
+                        .align(Alignment.BottomCenter)
+                        .padding(24.dp)
+                        .clip(RoundedCornerShape(24.dp))
+                        .height(IntrinsicSize.Min),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .weight(1f),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                    ) {
+                        ElevatedButton(
+                            onClick = {
+                                clipboardManager.getText()?.let {
+                                    viewModel.onScannedText(it.text)
+                                }
+                            },
+                        ) {
+                            Row(
+                                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                            ) {
+                                Icon(
+                                    Icons.Default.ContentPaste,
+                                    contentDescription = "Paste from clipboard",
+                                )
+                                Text("Paste from clipboard")
+                            }
+                        }
+                    }
+                }
             } else {
-                var textInput by remember(state.value.amount) { mutableStateOf(TextFieldValue(state.value.amount.toString())) }
+                var textInput by remember { mutableStateOf(TextFieldValue(viewModel.amount.toString())) }
                 LaunchedEffect(Unit) {
                     viewModel.processInput()
                 }
@@ -87,6 +128,7 @@ fun SendScreen(
                             value = textInput,
                             onValueChange = {
                                 textInput = it
+                                viewModel.changeAmount(it.text)
                             },
                         )
                         Spacer(modifier = Modifier.size(4.dp))

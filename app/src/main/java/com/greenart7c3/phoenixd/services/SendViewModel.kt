@@ -1,14 +1,12 @@
 package com.greenart7c3.phoenixd.services
 
 import android.content.Context
-import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.greenart7c3.phoenixd.utils.Parser
 import fr.acinq.lightning.payment.Bolt11Invoice
-import io.ktor.client.statement.bodyAsText
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -16,7 +14,6 @@ import kotlinx.coroutines.launch
 data class SendState(
     val sanitizedInput: String = "",
     val showScanner: Boolean = true,
-    val amount: Long = 0,
     val isLoading: Boolean = false,
 )
 
@@ -24,6 +21,7 @@ class SendViewModel : ViewModel() {
     private val _state = MutableStateFlow(SendState())
     val state = _state
     private val httpClient = CustomHttpClient()
+    var amount: Long = 0
 
     fun onScannedText(text: String) {
         val input = Parser.removePrefix(Parser.removeExcessInput(text))
@@ -31,10 +29,6 @@ class SendViewModel : ViewModel() {
             sanitizedInput = input,
             showScanner = false,
         )
-    }
-
-    init {
-        Log.d("SendViewModel", "SendViewModel created")
     }
 
     override fun onCleared() {
@@ -51,15 +45,13 @@ class SendViewModel : ViewModel() {
         if (input.startsWith("lnbc")) {
             val invoice = Bolt11Invoice.read(input)
             invoice.get().let {
-                state.value = state.value.copy(
-                    amount = it.amount?.truncateToSatoshi()?.sat ?: 0L,
-                )
+                amount = it.amount?.truncateToSatoshi()?.sat ?: 0L
             }
         }
     }
 
     fun send(context: Context, navController: NavController) {
-        if (state.value.amount <= 0) {
+        if (amount <= 0) {
             Toast.makeText(
                 context,
                 "Amount must be greater than 0",
@@ -74,7 +66,7 @@ class SendViewModel : ViewModel() {
                 httpClient.submitForm(
                     "payinvoice",
                     listOf(
-                        Pair("amountSat", state.value.amount.toString()),
+                        Pair("amountSat", amount.toString()),
                         Pair("invoice", input),
                     ),
                 )
@@ -82,7 +74,7 @@ class SendViewModel : ViewModel() {
                 httpClient.submitForm(
                     "payoffer",
                     listOf(
-                        Pair("amountSat", state.value.amount.toString()),
+                        Pair("amountSat", amount.toString()),
                         Pair("offer", input),
                     ),
                 )
@@ -90,21 +82,29 @@ class SendViewModel : ViewModel() {
                 httpClient.submitForm(
                     "paylnaddress",
                     listOf(
-                        Pair("amountSat", state.value.amount.toString()),
+                        Pair("amountSat", amount.toString()),
+                        Pair("address", input),
+                    ),
+                )
+            } else if (input.startsWith("bc1")) {
+                httpClient.submitForm(
+                    "sendtoaddress",
+                    listOf(
+                        Pair("amountSat", amount.toString()),
                         Pair("address", input),
                     ),
                 )
             } else {
-                httpClient.submitForm(
-                    "sendtoaddress",
-                    listOf(
-                        Pair("amountSat", state.value.amount.toString()),
-                        Pair("address", input),
-                    ),
-                )
+                viewModelScope.launch(Dispatchers.Main) {
+                    Toast.makeText(
+                        context,
+                        "Invalid input",
+                        Toast.LENGTH_SHORT,
+                    ).show()
+                }
+                state.value = state.value.copy(isLoading = false)
+                return@launch
             }
-
-            Log.d("SendViewModel", response.bodyAsText())
 
             state.value = state.value.copy(isLoading = false)
             if (response.status.value == 200) {
@@ -121,5 +121,10 @@ class SendViewModel : ViewModel() {
                 }
             }
         }
+    }
+
+    fun changeAmount(text: String) {
+        val localAmount = text.toLongOrNull() ?: 0
+        amount = localAmount
     }
 }
