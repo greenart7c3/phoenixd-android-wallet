@@ -1,5 +1,6 @@
 package com.greenart7c3.phoenixd.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -34,6 +35,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
@@ -70,6 +72,10 @@ fun SendScreen(
                         scanView = it
                     },
                     onScannedText = {
+                        if (!viewModel.validateInput(it)) {
+                            Toast.makeText(context, "Invalid input", Toast.LENGTH_SHORT).show()
+                            return@ScannerView
+                        }
                         viewModel.onScannedText(it)
                     },
                 )
@@ -91,6 +97,10 @@ fun SendScreen(
                         ElevatedButton(
                             onClick = {
                                 clipboardManager.getText()?.let {
+                                    if (!viewModel.validateInput(it.text)) {
+                                        Toast.makeText(context, "Invalid input", Toast.LENGTH_SHORT).show()
+                                        return@ElevatedButton
+                                    }
                                     viewModel.onScannedText(it.text)
                                 }
                             },
@@ -122,6 +132,12 @@ fun SendScreen(
                     if (state.value.isLoading) {
                         CircularProgressIndicator()
                     } else {
+                        Text(
+                            text = state.value.sanitizedInput,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                        )
+                        Spacer(modifier = Modifier.size(4.dp))
                         OutlinedTextField(
                             modifier = Modifier.fillMaxWidth(),
                             value = textInput,

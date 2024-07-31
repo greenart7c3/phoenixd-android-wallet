@@ -50,6 +50,16 @@ class SendViewModel : ViewModel() {
         }
     }
 
+    fun validateInput(input: String): Boolean {
+        return when {
+            input.startsWith("lnbc") -> true
+            input.startsWith("lno1") -> true
+            input.contains("@", ignoreCase = true) -> android.util.Patterns.EMAIL_ADDRESS.matcher(input).matches()
+            input.startsWith("bc1") -> true
+            else -> false
+        }
+    }
+
     fun send(context: Context, navController: NavController) {
         if (amount <= 0) {
             Toast.makeText(
@@ -78,7 +88,7 @@ class SendViewModel : ViewModel() {
                         Pair("offer", input),
                     ),
                 )
-            } else if (input.contains("@", ignoreCase = true)) {
+            } else if (input.contains("@", ignoreCase = true) && android.util.Patterns.EMAIL_ADDRESS.matcher(input).matches()) {
                 httpClient.submitForm(
                     "paylnaddress",
                     listOf(
