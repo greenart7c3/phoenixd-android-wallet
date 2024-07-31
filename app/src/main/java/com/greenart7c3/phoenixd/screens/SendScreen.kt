@@ -47,6 +47,7 @@ fun SendScreen(
 
     DisposableEffect(Unit) {
         onDispose {
+            scanView?.pause()
             viewModel.clear()
         }
     }
