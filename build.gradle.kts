@@ -7,7 +7,7 @@ plugins {
     alias(libs.plugins.compose.compiler) apply false
     alias(libs.plugins.ktlint) apply false
     alias(libs.plugins.serialization) apply false
-    kotlin("kapt") version "2.0.0" apply false
+    id("org.jetbrains.kotlin.kapt") version "2.0.0" apply false
 }
 
 tasks.register<Copy>("installGitHook") {
