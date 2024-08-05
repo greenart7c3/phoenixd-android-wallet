@@ -17,8 +17,8 @@ android {
         applicationId = "com.greenart7c3.phoenixd"
         minSdk = 26
         targetSdk = 34
-        versionCode = 7
-        versionName = "0.0.7"
+        versionCode = 8
+        versionName = "0.0.8"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
