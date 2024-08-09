@@ -42,6 +42,7 @@ import androidx.navigation.NavController
 import com.greenart7c3.phoenixd.services.SendViewModel
 import com.greenart7c3.phoenixd.ui.ScannerView
 import com.journeyapps.barcodescanner.DecoratedBarcodeView
+import fr.acinq.lightning.utils.sat
 
 @Composable
 fun SendScreen(
@@ -57,6 +58,7 @@ fun SendScreen(
         onDispose {
             scanView?.pause()
             viewModel.clear()
+            viewModel.amount = 0
         }
     }
 
@@ -120,7 +122,7 @@ fun SendScreen(
             } else {
                 var textInput by remember { mutableStateOf(TextFieldValue(viewModel.amount.toString())) }
                 LaunchedEffect(Unit) {
-                    viewModel.processInput()
+                    textInput = TextFieldValue(viewModel.processInput().toString())
                 }
                 Column(
                     Modifier
@@ -146,6 +148,12 @@ fun SendScreen(
                                 viewModel.changeAmount(it.text)
                             },
                         )
+                        Spacer(modifier = Modifier.size(4.dp))
+                        Row {
+                            Text(text = "Fee ")
+                            Text(text = state.value.fee.sat.sat.toString())
+                            Text(text = " sats")
+                        }
                         Spacer(modifier = Modifier.size(4.dp))
                         ElevatedButton(
                             onClick = {

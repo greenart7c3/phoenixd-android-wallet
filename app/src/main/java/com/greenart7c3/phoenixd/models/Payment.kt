@@ -14,4 +14,5 @@ data class Payment(
     val completedAt: Long? = null,
     val createdAt: Long? = null,
     val receivedSat: Long? = null,
+    val description: String? = null,
 )

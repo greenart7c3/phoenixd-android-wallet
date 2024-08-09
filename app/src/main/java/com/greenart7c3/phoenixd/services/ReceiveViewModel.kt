@@ -26,7 +26,7 @@ class ReceiveViewModel : ViewModel() {
         loadData()
     }
 
-    fun loadData() {
+    private fun loadData() {
         state.value =
             state.value.copy(
                 isRefreshing = true,
@@ -46,7 +46,6 @@ class ReceiveViewModel : ViewModel() {
                     url = "createinvoice",
                     parameters = listOf(
                         Pair("description", ""),
-                        Pair("amountSat", "1000"),
                     ),
                 )
                 val bodyInvoice = responseInvoice.body<GeneratedInvoice>()

@@ -15,6 +15,7 @@ data class SendState(
     val sanitizedInput: String = "",
     val showScanner: Boolean = true,
     val isLoading: Boolean = false,
+    val fee: Long = 0,
 )
 
 class SendViewModel : ViewModel() {
@@ -40,7 +41,7 @@ class SendViewModel : ViewModel() {
         state.value = SendState()
     }
 
-    fun processInput() {
+    fun processInput(): Long {
         val input = state.value.sanitizedInput
         if (input.startsWith("lnbc")) {
             val invoice = Bolt11Invoice.read(input)
@@ -48,6 +49,10 @@ class SendViewModel : ViewModel() {
                 amount = it.amount?.truncateToSatoshi()?.sat ?: 0L
             }
         }
+        state.value = state.value.copy(
+            fee = 4 + (amount * 4_000) / 1_000_000,
+        )
+        return amount
     }
 
     fun validateInput(input: String): Boolean {
@@ -132,7 +137,7 @@ class SendViewModel : ViewModel() {
         }
     }
 
-    fun parseEmailLikeAddress(input: String): Pair<String, String>? {
+    private fun parseEmailLikeAddress(input: String): Pair<String, String>? {
         if (!input.contains("@", ignoreCase = true)) return null
 
         // Ignore excess input, including additional lines, and leading/trailing whitespace
@@ -154,5 +159,8 @@ class SendViewModel : ViewModel() {
     fun changeAmount(text: String) {
         val localAmount = text.toLongOrNull() ?: 0
         amount = localAmount
+        state.value = state.value.copy(
+            fee = 4 + (localAmount * 4_000) / 1_000_000,
+        )
     }
 }

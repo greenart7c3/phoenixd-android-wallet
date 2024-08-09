@@ -1,8 +1,6 @@
 package com.greenart7c3.phoenixd.services
 
 import android.util.Log
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.greenart7c3.phoenixd.models.Channel

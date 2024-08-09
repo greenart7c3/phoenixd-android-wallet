@@ -233,56 +233,64 @@ fun MainScreen(
                             .fillMaxWidth()
                             .padding(8.dp),
                     ) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                        ) {
+                        Column {
                             Row(
-                                modifier =
-                                Modifier
-                                    .fillMaxWidth()
-                                    .padding(8.dp),
+                                modifier = Modifier.fillMaxWidth(),
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.SpaceBetween,
                             ) {
-                                payment.receivedSat?.let {
-                                    Text("You Received")
-                                    Column(
-                                        horizontalAlignment = Alignment.End,
-                                    ) {
-                                        Text(
-                                            text = "${DecimalFormat("#,###").format(it)} sat",
-                                            textAlign = TextAlign.End,
-                                        )
-                                        formatCreatedAt(payment.createdAt)?.let {
+                                Row(
+                                    modifier =
+                                    Modifier
+                                        .fillMaxWidth()
+                                        .padding(8.dp),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                ) {
+                                    payment.receivedSat?.let {
+                                        Text("You Received")
+                                        Column(
+                                            horizontalAlignment = Alignment.End,
+                                        ) {
                                             Text(
-                                                it,
-                                                fontWeight = FontWeight.Light,
+                                                text = "${DecimalFormat("#,###").format(it)} sat",
+                                                textAlign = TextAlign.End,
                                             )
+                                            formatCreatedAt(payment.createdAt)?.let {
+                                                Text(
+                                                    it,
+                                                    fontWeight = FontWeight.Light,
+                                                )
+                                            }
+                                        }
+                                    }
+                                    payment.sent?.let {
+                                        Text("You sent")
+                                        Column(
+                                            horizontalAlignment = Alignment.End,
+                                        ) {
+                                            val fees = payment.fees ?: 0
+                                            val fee = if (fees > 0) fees / 1000 else 0
+                                            val sent = if (fees > 0) it - fee else it
+                                            Text(
+                                                text = "${DecimalFormat("#,###").format(sent)} sat + ${DecimalFormat("#,###").format(fee)} sat fee",
+                                                textAlign = TextAlign.End,
+                                            )
+                                            formatCreatedAt(payment.createdAt)?.let {
+                                                Text(
+                                                    it,
+                                                    fontWeight = FontWeight.Light,
+                                                )
+                                            }
                                         }
                                     }
                                 }
-                                payment.sent?.let {
-                                    Text("You sent")
-                                    Column(
-                                        horizontalAlignment = Alignment.End,
-                                    ) {
-                                        val fees = payment.fees ?: 0
-                                        val fee = if (fees > 0) fees / 1000 else 0
-                                        val sent = if (fees > 0) it - fee else it
-                                        Text(
-                                            text = "${DecimalFormat("#,###").format(sent)} sat + ${DecimalFormat("#,###").format(fee)} sat fee",
-                                            textAlign = TextAlign.End,
-                                        )
-                                        formatCreatedAt(payment.createdAt)?.let {
-                                            Text(
-                                                it,
-                                                fontWeight = FontWeight.Light,
-                                            )
-                                        }
-                                    }
-                                }
+                            }
+                            payment.description?.let {
+                                Text(
+                                    it,
+                                    modifier = Modifier.padding(8.dp),
+                                )
                             }
                         }
                     }
