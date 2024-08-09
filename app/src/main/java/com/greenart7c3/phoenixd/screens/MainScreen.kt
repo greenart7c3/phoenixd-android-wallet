@@ -287,10 +287,12 @@ fun MainScreen(
                                 }
                             }
                             payment.description?.let {
-                                Text(
-                                    it,
-                                    modifier = Modifier.padding(8.dp),
-                                )
+                                if (it.isNotBlank()) {
+                                    Text(
+                                        it,
+                                        modifier = Modifier.padding(8.dp),
+                                    )
+                                }
                             }
                         }
                     }
