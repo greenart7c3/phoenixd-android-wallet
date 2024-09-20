@@ -1,5 +1,6 @@
 package com.greenart7c3.phoenixd.screens
 
+import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -60,6 +61,7 @@ fun Long.formatSat(): String {
     return "${DecimalFormat("#,###").format(this)} sat"
 }
 
+@SuppressLint("StateFlowValueCalledInComposition")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(
@@ -223,6 +225,50 @@ fun MainScreen(
                             fontWeight = FontWeight.Bold,
                         )
                         Text(text = "sat")
+                    }
+                }
+
+                item {
+                    val monthOf = LocalDateTime.now().month
+                    val totalReceivedThisMonth = viewModel.state.value.payments.sumOf {
+                        if (it.receivedSat != null) {
+                            val createdAt = LocalDateTime.ofInstant(it.createdAt?.let { it1 -> Instant.ofEpochMilli(it1) }, ZoneId.systemDefault())
+                            if (createdAt.month == monthOf) {
+                                it.receivedSat
+                            } else {
+                                0
+                            }
+                        } else {
+                            0
+                        }
+                    }
+
+                    val totalSentThisMonth = viewModel.state.value.payments.sumOf {
+                        if (it.sent != null) {
+                            val createdAt = LocalDateTime.ofInstant(it.createdAt?.let { it1 -> Instant.ofEpochMilli(it1) }, ZoneId.systemDefault())
+                            if (createdAt.month == monthOf) {
+                                it.sent
+                            } else {
+                                0
+                            }
+                        } else {
+                            0
+                        }
+                    }
+                    Row(
+                        Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Text("Received: ${DecimalFormat("#,###").format(totalReceivedThisMonth)} sat")
+                    }
+
+                    Row(
+                        Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Text("Sent: ${DecimalFormat("#,###").format(totalSentThisMonth)} sat")
                     }
                 }
 
